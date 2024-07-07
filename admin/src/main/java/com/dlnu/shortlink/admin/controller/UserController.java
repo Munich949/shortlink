@@ -3,6 +3,7 @@ package com.dlnu.shortlink.admin.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.dlnu.shortlink.admin.common.result.Result;
 import com.dlnu.shortlink.admin.common.result.Results;
+import com.dlnu.shortlink.admin.dto.req.UserUpdateReqDTO;
 import com.dlnu.shortlink.admin.dto.resp.UserActualRespDTO;
 import com.dlnu.shortlink.admin.dto.resp.UserRegisterReqDTO;
 import com.dlnu.shortlink.admin.dto.resp.UserRespDTO;
@@ -49,6 +50,15 @@ public class UserController {
     @PostMapping("/api/short-link/admin/v1/user")
     public Result<Void> register(@RequestBody UserRegisterReqDTO requestParam) {
         userService.register(requestParam);
+        return Results.success();
+    }
+
+    /**
+     * 修改用户
+     */
+    @PutMapping("/api/short-link/admin/v1/user")
+    public Result<Void> update(@RequestBody UserUpdateReqDTO requestParam) {
+        userService.update(requestParam);
         return Results.success();
     }
 }
