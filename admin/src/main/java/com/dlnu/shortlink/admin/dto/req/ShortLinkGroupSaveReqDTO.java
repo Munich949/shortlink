@@ -15,20 +15,18 @@
  * limitations under the License.
  */
 
-package com.dlnu.shortlink.admin.service;
+package com.dlnu.shortlink.admin.dto.req;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.dlnu.shortlink.admin.dao.entity.GroupDO;
+import lombok.Data;
 
 /**
- * 短链接分组接口层
+ * 短链接分组创建参数
  */
-public interface GroupService extends IService<GroupDO> {
+@Data
+public class ShortLinkGroupSaveReqDTO {
 
     /**
-     * 新增短链接分组
-     *
-     * @param groupName 短链接分组名
+     * 分组名
      */
-    void saveGroup(String groupName);
+    private String name;
 }
