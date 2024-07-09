@@ -20,6 +20,7 @@ package com.dlnu.shortlink.admin.controller;
 import com.dlnu.shortlink.admin.common.result.Result;
 import com.dlnu.shortlink.admin.common.result.Results;
 import com.dlnu.shortlink.admin.dto.req.ShortLinkGroupSaveReqDTO;
+import com.dlnu.shortlink.admin.dto.req.ShortLinkGroupSortReqDTO;
 import com.dlnu.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.dlnu.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
 import com.dlnu.shortlink.admin.service.GroupService;
@@ -70,6 +71,15 @@ public class GroupController {
     @DeleteMapping("/api/short-link/v1/group")
     public Result<Void> updateGroup(@RequestParam String gid) {
         groupService.deleteGroup(gid);
+        return Results.success();
+    }
+
+    /**
+     * 短链接分组排序
+     */
+    @PostMapping("/api/short-link/v1/group/sort")
+    public Result<Void> sortGroup(@RequestBody List<ShortLinkGroupSortReqDTO> requestParam) {
+        groupService.sortGroup(requestParam);
         return Results.success();
     }
 }
