@@ -17,6 +17,7 @@ import com.dlnu.shortlink.admin.dto.resp.UserLoginRespDTO;
 import com.dlnu.shortlink.admin.dto.resp.UserRegisterReqDTO;
 import com.dlnu.shortlink.admin.dto.resp.UserRespDTO;
 import com.dlnu.shortlink.admin.enums.UserErrorCodeEnum;
+import com.dlnu.shortlink.admin.service.GroupService;
 import com.dlnu.shortlink.admin.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RBloomFilter;
@@ -41,6 +42,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     private final RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
     private final RedissonClient redissonClient;
     private final StringRedisTemplate stringRedisTemplate;
+    private final GroupService groupService;
 
     @Override
     public UserRespDTO getUserByUsername(String username) {
@@ -73,6 +75,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
                 throw new ClientException(USER_SAVE_ERROR);
             }
             userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
+            groupService.saveGroup(requestParam.getUsername(), "默认分组");
         } catch (DuplicateKeyException ex) {
             throw new ClientException(USER_EXIST);
         } finally {
