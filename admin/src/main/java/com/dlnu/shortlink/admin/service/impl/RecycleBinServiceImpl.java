@@ -15,30 +15,34 @@
  * limitations under the License.
  */
 
-package com.dlnu.shortlink.admin.controller;
+package com.dlnu.shortlink.admin.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.dlnu.shortlink.admin.common.biz.user.UserContext;
+import com.dlnu.shortlink.admin.common.convention.exception.ServiceException;
 import com.dlnu.shortlink.admin.common.result.Result;
-import com.dlnu.shortlink.admin.common.result.Results;
+import com.dlnu.shortlink.admin.dao.entity.GroupDO;
+import com.dlnu.shortlink.admin.dao.mapper.GroupMapper;
 import com.dlnu.shortlink.admin.remote.ShortLinkRemoteService;
-import com.dlnu.shortlink.admin.remote.dto.req.RecycleBinSaveReqDTO;
 import com.dlnu.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.dlnu.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
 import com.dlnu.shortlink.admin.service.RecycleBinService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
- * 回收站管理控制层
+ * URL 回收站接口实现层
  */
-@RestController(value = "recycleBinControllerByAdmin")
+@Service(value = "recycleBinServiceImplByAdmin")
 @RequiredArgsConstructor
-public class RecycleBinController {
+public class RecycleBinServiceImpl implements RecycleBinService {
 
-    private final RecycleBinService recycleBinService;
+    private final GroupMapper groupMapper;
 
     /**
      * 后续重构为 SpringCloud Feign 调用
@@ -46,20 +50,16 @@ public class RecycleBinController {
     ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {
     };
 
-    /**
-     * 保存回收站
-     */
-    @PostMapping("/api/short-link/admin/v1/recycle-bin/save")
-    public Result<Void> saveRecycleBin(@RequestBody RecycleBinSaveReqDTO requestParam) {
-        shortLinkRemoteService.saveRecycleBin(requestParam);
-        return Results.success();
-    }
-
-    /**
-     * 分页查询回收站短链接
-     */
-    @GetMapping("/api/short-link/admin/v1/recycle-bin/page")
-    public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkRecycleBinPageReqDTO requestParam) {
-        return recycleBinService.pageRecycleBinShortLink(requestParam);
+    @Override
+    public Result<IPage<ShortLinkPageRespDTO>> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParam) {
+        LambdaQueryWrapper<GroupDO> queryWrapper = Wrappers.lambdaQuery(GroupDO.class)
+                .eq(GroupDO::getUsername, UserContext.getUsername())
+                .eq(GroupDO::getDelFlag, 0);
+        List<GroupDO> groupDOList = groupMapper.selectList(queryWrapper);
+        if (CollUtil.isEmpty(groupDOList)) {
+            throw new ServiceException("用户无分组信息");
+        }
+        requestParam.setGidList(groupDOList.stream().map(GroupDO::getGid).toList());
+        return shortLinkRemoteService.pageRecycleBinShortLink(requestParam);
     }
 }

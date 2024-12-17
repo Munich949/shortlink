@@ -15,32 +15,22 @@
  * limitations under the License.
  */
 
-package com.dlnu.shortlink.project.service;
+package com.dlnu.shortlink.project.dto.req;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dlnu.shortlink.project.dao.entity.ShortLinkDO;
-import com.dlnu.shortlink.project.dto.RecycleBinSaveReqDTO;
-import com.dlnu.shortlink.project.dto.req.ShortLinkRecycleBinPageReqDTO;
-import com.dlnu.shortlink.project.dto.resp.ShortLinkPageRespDTO;
+import lombok.Data;
+
+import java.util.List;
 
 /**
- * 回收站管理接口层
+ * 回收站短链接分页请求参数
  */
-public interface RecycleBinService extends IService<ShortLinkDO> {
+@Data
+public class ShortLinkRecycleBinPageReqDTO extends Page<ShortLinkDO> {
 
     /**
-     * 保存回收站
-     *
-     * @param requestParam 回收站保存请求参数
+     * 分组标识
      */
-    void saveRecycleBin(RecycleBinSaveReqDTO requestParam);
-
-    /**
-     * 分页查询回收站短链接
-     *
-     * @param requestParam 分页查询回收站短链接请求参数
-     * @return 分页查询回收站短链接返回参数
-     */
-    IPage<ShortLinkPageRespDTO> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParam);
+    private List<String> gidList;
 }
