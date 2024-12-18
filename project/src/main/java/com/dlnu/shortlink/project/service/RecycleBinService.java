@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dlnu.shortlink.project.dao.entity.ShortLinkDO;
 import com.dlnu.shortlink.project.dto.RecycleBinSaveReqDTO;
+import com.dlnu.shortlink.project.dto.req.RecycleBinRecoverReqDTO;
 import com.dlnu.shortlink.project.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.dlnu.shortlink.project.dto.resp.ShortLinkPageRespDTO;
 
@@ -43,4 +44,11 @@ public interface RecycleBinService extends IService<ShortLinkDO> {
      * @return 分页查询回收站短链接返回参数
      */
     IPage<ShortLinkPageRespDTO> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParam);
+
+    /**
+     * 回收站恢复短链接
+     *
+     * @param requestParam 回收站恢复短链接请求参数
+     */
+    void recoverRecycleBin(RecycleBinRecoverReqDTO requestParam);
 }
