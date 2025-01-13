@@ -15,20 +15,19 @@
  * limitations under the License.
  */
 
-package com.dlnu.shortlink.project.common.constant;
+package com.dlnu.shortlink.project.dao.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.dlnu.shortlink.project.dao.entity.LinkLocaleStatsDO;
+import org.apache.ibatis.annotations.Param;
 
 /**
- * 短链接常量类
+ * 地区统计访问持久层
  */
-public class ShortLinkConstant {
+public interface LinkLocaleStatsMapper extends BaseMapper<LinkLocaleStatsDO> {
 
     /**
-     * 永久短链接默认缓存有效时间，默认一个月
+     * 记录地区访问监控数据
      */
-    public static final long DEFAULT_CACHE_VALID_TIME = 2626560000L;
-
-    /**
-     * 高德获取地区接口地址
-     */
-    public static final String AMAP_REMOTE_URL = "https://restapi.amap.com/v3/ip";
+    void shortLinkLocaleStats(@Param("linkLocaleStats") LinkLocaleStatsDO linkLocaleStatsDO);
 }
