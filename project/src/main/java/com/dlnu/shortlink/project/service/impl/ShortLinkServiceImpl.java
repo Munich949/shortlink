@@ -96,6 +96,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final LinkOsStatsMapper linkOsStatsMapper;
     private final LinkBrowserStatsMapper linkBrowserStatsMapper;
     private final LinkDeviceStatsMapper linkDeviceStatsMapper;
+    private final LinkNetworkStatsMapper linkNetworkStatsMapper;
     private final LinkAccessLogsMapper linkAccessLogsMapper;
 
     @Value("${short-link.stats.locale.amap-key}")
@@ -386,7 +387,15 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .cnt(1)
                         .device(LinkUtil.getDevice(((HttpServletRequest) request)))
                         .build();
-                linkDeviceStatsMapper.shortLinkDeviceState(linkDeviceStatsDO);
+                linkDeviceStatsMapper.shortLinkDeviceStats(linkDeviceStatsDO);
+                LinkNetworkStatsDO linkNetworkStatsDO = LinkNetworkStatsDO.builder()
+                        .fullShortUrl(fullShortUrl)
+                        .gid(gid)
+                        .date(new Date())
+                        .cnt(1)
+                        .network(LinkUtil.getNetwork(((HttpServletRequest) request)))
+                        .build();
+                linkNetworkStatsMapper.shortLinkNetworkStats(linkNetworkStatsDO);
                 LinkAccessLogsDO linkAccessLogsDO = LinkAccessLogsDO.builder()
                         .user(uv.get())
                         .ip(remoteAddr)

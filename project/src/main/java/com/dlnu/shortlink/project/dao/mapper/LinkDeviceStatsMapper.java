@@ -29,5 +29,5 @@ public interface LinkDeviceStatsMapper extends BaseMapper<LinkDeviceStatsDO> {
     /**
      * 记录访问设备监控数据
      */
-    void shortLinkDeviceState(@Param("linkDeviceStats") LinkDeviceStatsDO linkDeviceStatsDO);
+    void shortLinkDeviceStats(@Param("linkDeviceStats") LinkDeviceStatsDO linkDeviceStatsDO);
 }

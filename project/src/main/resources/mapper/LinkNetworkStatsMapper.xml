@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dlnu.shortlink.project.dao.mapper.LinkDeviceStatsMapper">
+<mapper namespace="com.dlnu.shortlink.project.dao.mapper.LinkNetworkStatsMapper">
     <sql id="columns">
         full_short_url,
         gid,
         date,
         cnt,
-        device,
+        network,
         create_time,
         update_time,
         del_flag
     </sql>
 
-    <insert id="shortLinkDeviceStats">
-        INSERT INTO t_link_device_stats (
+    <insert id="shortLinkNetworkStats">
+        INSERT INTO t_link_network_stats (
         <include refid="columns"></include>)
-        VALUES (#{linkDeviceStats.fullShortUrl},
-        #{linkDeviceStats.gid},
-        #{linkDeviceStats.date},
-        #{linkDeviceStats.cnt},
-        #{linkDeviceStats.device},
+        VALUES (#{linkNetworkStats.fullShortUrl},
+        #{linkNetworkStats.gid},
+        #{linkNetworkStats.date},
+        #{linkNetworkStats.cnt},
+        #{linkNetworkStats.network},
         NOW(),
         NOW(),
         0)
         ON DUPLICATE KEY
-        UPDATE cnt = cnt + #{linkDeviceStats.cnt}
+        UPDATE cnt = cnt + #{linkNetworkStats.cnt}
     </insert>
 </mapper>
