@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.dlnu.shortlink.project.dto;
+package com.dlnu.shortlink.project.dto.req;
 
 import lombok.Data;
 

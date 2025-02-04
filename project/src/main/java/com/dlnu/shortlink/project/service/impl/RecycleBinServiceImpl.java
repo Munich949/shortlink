@@ -25,7 +25,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dlnu.shortlink.project.dao.entity.ShortLinkDO;
 import com.dlnu.shortlink.project.dao.mapper.ShortLinkMapper;
-import com.dlnu.shortlink.project.dto.RecycleBinSaveReqDTO;
+import com.dlnu.shortlink.project.dto.req.RecycleBinSaveReqDTO;
 import com.dlnu.shortlink.project.dto.req.RecycleBinRecoverReqDTO;
 import com.dlnu.shortlink.project.dto.req.RecycleBinRemoveReqDTO;
 import com.dlnu.shortlink.project.dto.req.ShortLinkRecycleBinPageReqDTO;

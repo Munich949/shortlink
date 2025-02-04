@@ -20,7 +20,7 @@ package com.dlnu.shortlink.project.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dlnu.shortlink.project.dao.entity.ShortLinkDO;
-import com.dlnu.shortlink.project.dto.RecycleBinSaveReqDTO;
+import com.dlnu.shortlink.project.dto.req.RecycleBinSaveReqDTO;
 import com.dlnu.shortlink.project.dto.req.RecycleBinRecoverReqDTO;
 import com.dlnu.shortlink.project.dto.req.RecycleBinRemoveReqDTO;
 import com.dlnu.shortlink.project.dto.req.ShortLinkRecycleBinPageReqDTO;
