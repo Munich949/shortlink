@@ -19,7 +19,10 @@ package com.dlnu.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dlnu.shortlink.project.dao.entity.LinkLocaleStatsDO;
+import com.dlnu.shortlink.project.dto.req.ShortLinkStatsReqDTO;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 地区统计访问持久层
@@ -30,4 +33,9 @@ public interface LinkLocaleStatsMapper extends BaseMapper<LinkLocaleStatsDO> {
      * 记录地区访问监控数据
      */
     void shortLinkLocaleStats(@Param("linkLocaleStats") LinkLocaleStatsDO linkLocaleStatsDO);
+
+    /**
+     * 根据短链接获取指定日期内基础监控数据
+     */
+    List<LinkLocaleStatsDO> listLocaleByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
 }

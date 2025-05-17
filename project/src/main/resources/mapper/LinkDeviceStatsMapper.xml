@@ -26,4 +26,18 @@
         ON DUPLICATE KEY
         UPDATE cnt = cnt + #{linkDeviceStats.cnt}
     </insert>
+
+    <select id="listDeviceStatsByShortLink" resultType="com.dlnu.shortlink.project.dao.entity.LinkDeviceStatsDO">
+        SELECT
+            device,
+            SUM(cnt) AS cnt
+        FROM
+            t_link_device_stats
+        WHERE
+            full_short_url = #{param.fullShortUrl}
+            AND gid = #{param.gid}
+            AND date BETWEEN CONCAT(#{param.startDate}, ' 00:00:00') AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            device
+    </select>
 </mapper>

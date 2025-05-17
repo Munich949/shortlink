@@ -34,4 +34,52 @@
         uv = uv + #{linkAccessStats.uv},
         uip = uip + #{linkAccessStats.uip}
     </insert>
+
+    <select id="listStatsByShortLink" resultType="com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO">
+        SELECT
+            date,
+            SUM(pv) AS pv,
+            SUM(uv) AS uv,
+            SUM(uip) AS uip
+        FROM
+            t_link_access_stats
+        WHERE
+            full_short_url = #{param.fullShortUrl}
+            AND gid = #{param.gid}
+            AND date BETWEEN CONCAT( #{param.startDate}, ' 00:00:00') AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            date
+    </select>
+
+    <select id="listHourStatsByShortLink" resultType="com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO">
+        SELECT
+            hour,
+            SUM(pv) AS pv,
+            SUM(uv) AS uv,
+            SUM(uip) AS uip
+        FROM
+            t_link_access_stats
+        WHERE
+            full_short_url = #{param.fullShortUrl}
+            AND gid = #{param.gid}
+            AND date BETWEEN CONCAT(#{param.startDate}, ' 00:00:00') AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            hour
+    </select>
+
+    <select id="listWeekdayStatsByShortLink" resultType="com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO">
+        SELECT
+            weekday,
+            SUM(pv) AS pv,
+            SUM(uv) AS uv,
+            SUM(uip) AS uip
+        FROM
+            t_link_access_stats
+        WHERE
+            full_short_url = #{param.fullShortUrl}
+            AND gid = #{param.gid}
+            AND date BETWEEN CONCAT(#{param.startDate}, ' 00:00:00') AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            weekday
+    </select>
 </mapper>

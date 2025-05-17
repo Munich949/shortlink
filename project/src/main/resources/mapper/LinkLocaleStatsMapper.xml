@@ -32,4 +32,18 @@
         ON DUPLICATE KEY
         UPDATE cnt = cnt + #{linkLocaleStats.cnt}
     </insert>
+
+    <select id="listLocaleByShortLink" resultType="com.dlnu.shortlink.project.dao.entity.LinkLocaleStatsDO">
+        SELECT
+            province,
+            SUM(cnt) AS cnt
+        FROM
+            t_link_locale_stats
+        WHERE
+            full_short_url = #{param.fullShortUrl}
+            AND gid = #{param.gid}
+            AND date BETWEEN CONCAT(#{param.startDate}, ' 00:00:00') AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            province
+    </select>
 </mapper>

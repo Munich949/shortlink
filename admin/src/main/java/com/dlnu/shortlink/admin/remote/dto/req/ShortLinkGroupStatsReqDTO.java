@@ -15,27 +15,28 @@
  * limitations under the License.
  */
 
-package com.dlnu.shortlink.project.dao.mapper;
+package com.dlnu.shortlink.admin.remote.dto.req;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dlnu.shortlink.project.dao.entity.LinkDeviceStatsDO;
-import com.dlnu.shortlink.project.dto.req.ShortLinkStatsReqDTO;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
+import lombok.Data;
 
 /**
- * 访问设备监控持久层
+ * 分组短链接监控请求参数
  */
-public interface LinkDeviceStatsMapper extends BaseMapper<LinkDeviceStatsDO> {
+@Data
+public class ShortLinkGroupStatsReqDTO {
 
     /**
-     * 记录访问设备监控数据
+     * 分组标识
      */
-    void shortLinkDeviceStats(@Param("linkDeviceStats") LinkDeviceStatsDO linkDeviceStatsDO);
+    private String gid;
 
     /**
-     * 根据短链接获取指定日期内访问设备监控数据
+     * 开始日期
      */
-    List<LinkDeviceStatsDO> listDeviceStatsByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
+    private String startDate;
+
+    /**
+     * 结束日期
+     */
+    private String endDate;
 }
