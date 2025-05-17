@@ -1,7 +1,8 @@
 package com.dlnu.shortlink.project.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO;
 import com.dlnu.shortlink.project.dao.entity.LinkDeviceStatsDO;
@@ -14,9 +15,7 @@ import com.dlnu.shortlink.project.service.ShortLinkStatsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -39,6 +38,34 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
 
         // 基础访问详情
         List<LinkAccessStatsDO> listStatsByShortLink = linkAccessStatsMapper.listStatsByShortLink(requestParam);
+        if (CollUtil.isEmpty(listStatsByShortLink)) {
+            return null;
+        }
+
+        List<ShortLinkStatsAccessDailyRespDTO> daily = new ArrayList<>();
+        List<String> rangeDates = DateUtil.rangeToList(DateUtil.parse(requestParam.getStartDate()), DateUtil.parse(requestParam.getEndDate()), DateField.DAY_OF_MONTH).stream()
+                .map(DateUtil::formatDate)
+                .toList();
+        rangeDates.forEach(each -> listStatsByShortLink.stream()
+                .filter(item -> Objects.equals(each, DateUtil.formatDate(item.getDate())))
+                .findFirst()
+                .ifPresentOrElse(item -> {
+                    ShortLinkStatsAccessDailyRespDTO accessDailyRespDTO = ShortLinkStatsAccessDailyRespDTO.builder()
+                            .date(each)
+                            .pv(item.getPv())
+                            .uv(item.getUv())
+                            .uip(item.getUip())
+                            .build();
+                    daily.add(accessDailyRespDTO);
+                }, () -> {
+                    ShortLinkStatsAccessDailyRespDTO accessDailyRespDTO = ShortLinkStatsAccessDailyRespDTO.builder()
+                            .date(each)
+                            .pv(0)
+                            .uv(0)
+                            .uip(0)
+                            .build();
+                    daily.add(accessDailyRespDTO);
+                }));
 
         // 小时访问详情
         List<Integer> hourStats = CollUtil.newArrayList();
@@ -165,8 +192,18 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
         // 访客访问类型详情
         List<ShortLinkStatsUvRespDTO> uvTypeStats = new ArrayList<>();
         HashMap<String, Object> findUvTypeByShortLink = linkAccessLogsMapper.findUvTypeCntByShortLink(requestParam);
-        int oldUserCnt = Integer.parseInt(findUvTypeByShortLink.get("oldUserCnt").toString());
-        int newUserCnt = Integer.parseInt(findUvTypeByShortLink.get("newUserCnt").toString());
+        int oldUserCnt = Integer.parseInt(
+                Optional.ofNullable(findUvTypeByShortLink)
+                        .map(each -> each.get("oldUserCnt"))
+                        .map(Object::toString)
+                        .orElse("0")
+        );
+        int newUserCnt = Integer.parseInt(
+                Optional.ofNullable(findUvTypeByShortLink)
+                        .map(each -> each.get("newUserCnt"))
+                        .map(Object::toString)
+                        .orElse("0")
+        );
         int uvSum = oldUserCnt + newUserCnt;
         double oldUserRatio = (double) oldUserCnt / uvSum;
         double actualOldUserRatio = Math.round(oldUserRatio * 100.0) / 100.0;
@@ -186,7 +223,7 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
         uvTypeStats.add(oldUvRespDTO);
 
         return ShortLinkStatsRespDTO.builder()
-                .daily(BeanUtil.copyToList(listStatsByShortLink, ShortLinkStatsAccessDailyRespDTO.class))
+                .daily(daily)
                 .hourStats(hourStats)
                 .weekdayStats(weekdayStats)
                 .localeCnStats(localeCnStats)
