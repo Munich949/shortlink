@@ -19,6 +19,7 @@ package com.dlnu.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dlnu.shortlink.project.dao.entity.LinkAccessLogsDO;
+import com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO;
 import com.dlnu.shortlink.project.dto.req.ShortLinkStatsReqDTO;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
@@ -51,4 +52,9 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
                                                   @Param("startDate") String startDate,
                                                   @Param("endDate") String endDate,
                                                   @Param("userAccessLogsList") List<String> userAccessLogsList);
+
+    /**
+     * 根据短链接获取指定日期内PV、UV、UIP数据
+     */
+    LinkAccessStatsDO findPvUvUipStatsByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
 }

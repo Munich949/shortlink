@@ -78,4 +78,22 @@
             </foreach>
         GROUP BY user;
     </select>
+
+
+    <select id="findPvUvUipStatsByShortLink" resultType="com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO">
+        SELECT
+            COUNT(user) AS pv,
+            COUNT(DISTINCT user) AS uv,
+            COUNT(DISTINCT ip) AS uip
+        FROM
+            t_link_access_logs
+        WHERE
+            full_short_url = #{param.fullShortUrl}
+          AND gid = #{param.gid}
+          AND create_time
+              BETWEEN CONCAT(#{param.startDate},  ' 00:00:00')
+              AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            full_short_url, gid;
+    </select>
 </mapper>
