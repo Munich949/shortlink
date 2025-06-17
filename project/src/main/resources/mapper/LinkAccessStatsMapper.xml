@@ -51,6 +51,23 @@
             date
     </select>
 
+    <select id="listStatsByGroup" resultType="com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO">
+        SELECT
+            date,
+            SUM(pv) AS pv,
+            SUM(uv) AS uv,
+            SUM(uip) AS uip
+        FROM
+            t_link_access_stats
+        WHERE
+            gid = #{param.gid}
+          AND date
+            BETWEEN CONCAT(#{param.startDate}, '00:00:00')
+            AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            date
+    </select>
+
     <select id="listHourStatsByShortLink" resultType="com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO">
         SELECT
             hour,
@@ -67,6 +84,23 @@
             hour
     </select>
 
+    <select id="listHourStatsByGroup" resultType="com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO">
+        SELECT
+            hour,
+            SUM(pv) AS pv,
+            SUM(uv) AS uv,
+            SUM(uip) AS uip
+        FROM
+            t_link_access_stats
+        WHERE
+            gid = #{param.gid}
+          AND date
+              BETWEEN CONCAT(#{param.startDate}, ' 00:00:00')
+              AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            hour
+    </select>
+
     <select id="listWeekdayStatsByShortLink" resultType="com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO">
         SELECT
             weekday,
@@ -79,6 +113,23 @@
             full_short_url = #{param.fullShortUrl}
             AND gid = #{param.gid}
             AND date BETWEEN CONCAT(#{param.startDate}, ' 00:00:00') AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            weekday
+    </select>
+
+    <select id="listWeekdayStatsByGroup" resultType="com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO">
+        SELECT
+            weekday,
+            SUM(pv) AS pv,
+            SUM(uv) AS uv,
+            SUM(uip) AS uip
+        FROM
+            t_link_access_stats
+        WHERE
+            gid = #{param.gid}
+          AND date
+              BETWEEN CONCAT(#{param.startDate}, ' 00:00:00')
+              AND CONCAT(#{param.endDate}, ' 23:59:59')
         GROUP BY
             weekday
     </select>

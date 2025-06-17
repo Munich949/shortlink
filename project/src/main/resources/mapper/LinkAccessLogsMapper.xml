@@ -31,6 +31,24 @@
         LIMIT 5
     </select>
 
+    <select id="listTopIpByGroup" resultType="java.util.HashMap">
+        SELECT
+            ip,
+            COUNT(ip) AS cnt
+        FROM
+            t_link_access_logs
+        WHERE
+            gid = #{param.gid}
+            AND create_time
+                BETWEEN CONCAT(#{param.startDate}, ' 00:00:00')
+                AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            ip
+        ORDER BY
+            cnt DESC
+        LIMIT 5
+    </select>
+
     <select id="findUvTypeCntByShortLink" resultType="java.util.HashMap">
         SELECT
             SUM(old_user) AS oldUserCnt,
@@ -92,8 +110,21 @@
           AND gid = #{param.gid}
           AND create_time
               BETWEEN CONCAT(#{param.startDate},  ' 00:00:00')
-              AND CONCAT(#{param.endDate}, ' 23:59:59')
-        GROUP BY
-            full_short_url, gid;
+              AND CONCAT(#{param.endDate}, ' 23:59:59');
+    </select>
+
+    <select id="findPvUvUipStatsByShortGroup"
+            resultType="com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO">
+        SELECT
+            COUNT(user) AS pv,
+            COUNT(DISTINCT user) AS uv,
+            COUNT(DISTINCT ip) AS uip
+        FROM
+            t_link_access_logs
+        WHERE
+            gid = #{param.gid}
+          AND create_time
+              BETWEEN CONCAT(#{param.startDate},  ' 00:00:00')
+              AND CONCAT(#{param.endDate}, ' 23:59:59');
     </select>
 </mapper>

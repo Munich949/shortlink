@@ -40,4 +40,19 @@
         GROUP BY
             browser
     </select>
+
+    <select id="listBrowserStatsByGroup" resultType="java.util.HashMap">
+        SELECT
+            browser,
+            SUM(cnt) AS cnt
+        FROM
+            t_link_browser_stats
+        WHERE
+            gid = #{param.gid}
+            AND date
+                BETWEEN CONCAT(#{param.startDate}, ' 00:00:00')
+                AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            browser
+    </select>
 </mapper>

@@ -40,4 +40,19 @@
         GROUP BY
             network
     </select>
+
+    <select id="listNetworkStatsByGroup" resultType="com.dlnu.shortlink.project.dao.entity.LinkNetworkStatsDO">
+        SELECT
+            network,
+            SUM(cnt) AS cnt
+        FROM
+            t_link_network_stats
+        WHERE
+            gid = #{param.gid}
+            AND date
+                BETWEEN CONCAT(#{param.startDate}, ' 00:00:00')
+                AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            network
+    </select>
 </mapper>

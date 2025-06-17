@@ -20,6 +20,7 @@ package com.dlnu.shortlink.project.dao.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dlnu.shortlink.project.dao.entity.LinkAccessLogsDO;
 import com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO;
+import com.dlnu.shortlink.project.dto.req.ShortLinkGroupStatsReqDTO;
 import com.dlnu.shortlink.project.dto.req.ShortLinkStatsReqDTO;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
@@ -37,6 +38,11 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
      * 根据短链接获取指定日期内高频访问IP数据
      */
     List<HashMap<String, Object>> listTopIpByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
+
+    /**
+     * 根据分组获取指定日期内PV、UV、UIP数据
+     */
+    List<HashMap<String, Object>> listTopIpByGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
 
     /**
      * 根据短链接获取指定日期内新旧访客数据
@@ -57,4 +63,9 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
      * 根据短链接获取指定日期内PV、UV、UIP数据
      */
     LinkAccessStatsDO findPvUvUipStatsByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
+
+    /**
+     * 根据短链接分组获取指定日期内PV、UV、UIP数据
+     */
+    LinkAccessStatsDO findPvUvUipStatsByShortGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
 }

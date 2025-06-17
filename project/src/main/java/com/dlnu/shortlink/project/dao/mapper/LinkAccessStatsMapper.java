@@ -19,6 +19,7 @@ package com.dlnu.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dlnu.shortlink.project.dao.entity.LinkAccessStatsDO;
+import com.dlnu.shortlink.project.dto.req.ShortLinkGroupStatsReqDTO;
 import com.dlnu.shortlink.project.dto.req.ShortLinkStatsReqDTO;
 import org.apache.ibatis.annotations.Param;
 
@@ -40,12 +41,27 @@ public interface LinkAccessStatsMapper extends BaseMapper<LinkAccessStatsDO> {
     List<LinkAccessStatsDO> listStatsByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
 
     /**
+     * 根据短链接分组获取指定日期内基础监控数据
+     */
+    List<LinkAccessStatsDO> listStatsByGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
+
+    /**
      * 根据短链接获取指定日期内小时基础监控数据
      */
     List<LinkAccessStatsDO> listHourStatsByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
 
     /**
+     * 根据短链接分组获取指定日期内小时基础监控数据
+     */
+    List<LinkAccessStatsDO> listHourStatsByGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
+
+    /**
      * 根据短链接获取指定日期内星期基础监控数据
      */
     List<LinkAccessStatsDO> listWeekdayStatsByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
+
+    /**
+     * 根据短链接分组获取指定日期内小时基础监控数据
+     */
+    List<LinkAccessStatsDO> listWeekdayStatsByGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
 }

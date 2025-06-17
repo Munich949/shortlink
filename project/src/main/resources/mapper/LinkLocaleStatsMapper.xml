@@ -46,4 +46,18 @@
         GROUP BY
             province
     </select>
+    <select id="listLocaleByGroup" resultType="com.dlnu.shortlink.project.dao.entity.LinkLocaleStatsDO">
+        SELECT
+            province,
+            SUM(cnt) AS cnt
+        FROM
+            t_link_locale_stats
+        WHERE
+            gid = #{param.gid}
+            AND date
+                BETWEEN CONCAT(#{param.startDate}, ' 00:00:00')
+                AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            province
+    </select>
 </mapper>

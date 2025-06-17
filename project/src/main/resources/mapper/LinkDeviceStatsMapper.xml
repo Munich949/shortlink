@@ -40,4 +40,18 @@
         GROUP BY
             device
     </select>
+    <select id="listDeviceStatsByGroup" resultType="com.dlnu.shortlink.project.dao.entity.LinkDeviceStatsDO">
+        SELECT
+            device,
+            SUM(cnt) AS cnt
+        FROM
+            t_link_device_stats
+        WHERE
+            gid = #{param.gid}
+            AND date
+                BETWEEN CONCAT(#{param.startDate}, ' 00:00:00')
+                AND CONCAT(#{param.endDate}, ' 23:59:59')
+        GROUP BY
+            device
+    </select>
 </mapper>
