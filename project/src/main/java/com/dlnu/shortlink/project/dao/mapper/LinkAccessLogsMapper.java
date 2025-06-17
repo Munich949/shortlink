@@ -60,6 +60,17 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
                                                   @Param("userAccessLogsList") List<String> userAccessLogsList);
 
     /**
+     * 获取分组用户信息是否新老访客
+     */
+    @MapKey("user")
+    List<Map<String, Object>> selectGroupUvTypeByUsers(
+            @Param("gid") String gid,
+            @Param("startDate") String startDate,
+            @Param("endDate") String endDate,
+            @Param("userAccessLogsList") List<String> userAccessLogsList
+    );
+
+    /**
      * 根据短链接获取指定日期内PV、UV、UIP数据
      */
     LinkAccessStatsDO findPvUvUipStatsByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);

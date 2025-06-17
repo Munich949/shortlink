@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dlnu.shortlink.project.dao.entity.*;
 import com.dlnu.shortlink.project.dao.mapper.*;
+import com.dlnu.shortlink.project.dto.req.ShortLinkGroupStatsAccessRecordReqDTO;
 import com.dlnu.shortlink.project.dto.req.ShortLinkGroupStatsReqDTO;
 import com.dlnu.shortlink.project.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import com.dlnu.shortlink.project.dto.req.ShortLinkStatsReqDTO;
@@ -419,11 +420,12 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
 
     @Override
     public IPage<ShortLinkStatsAccessRecordRespDTO> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam) {
-
         LambdaQueryWrapper<LinkAccessLogsDO> queryWrapper = Wrappers.lambdaQuery(LinkAccessLogsDO.class)
                 .eq(LinkAccessLogsDO::getFullShortUrl, requestParam.getFullShortUrl())
                 .eq(LinkAccessLogsDO::getGid, requestParam.getGid())
-                .between(LinkAccessLogsDO::getCreateTime, requestParam.getStartDate(), requestParam.getEndDate())
+                .between(LinkAccessLogsDO::getCreateTime, 
+                        DateUtil.parseDateTime(requestParam.getStartDate() + " 00:00:00"), 
+                        DateUtil.parseDateTime(requestParam.getEndDate() + " 23:59:59"))
                 .eq(LinkAccessLogsDO::getDelFlag, 0);
         IPage<LinkAccessLogsDO> linkAccessLogsPage = linkAccessLogsMapper.selectPage(requestParam, queryWrapper);
         IPage<ShortLinkStatsAccessRecordRespDTO> actualResult = linkAccessLogsPage.convert(each -> BeanUtil.toBean(each, ShortLinkStatsAccessRecordRespDTO.class));
@@ -433,6 +435,37 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
         List<Map<String, Object>> uvTypeList = linkAccessLogsMapper.selectUvTypeByUsers(
                 requestParam.getGid(),
                 requestParam.getFullShortUrl(),
+                requestParam.getStartDate(),
+                requestParam.getEndDate(),
+                userAccessLogsList
+        );
+        actualResult.getRecords().forEach(each -> {
+            String uvType = uvTypeList.stream()
+                    .filter(item -> Objects.equals(each.getUser(), item.get("user")))
+                    .findFirst()
+                    .map(item -> item.get("uvType"))
+                    .map(Object::toString)
+                    .orElse("旧访客");
+            each.setUvType(uvType);
+        });
+        return actualResult;
+    }
+
+    @Override
+    public IPage<ShortLinkStatsAccessRecordRespDTO> groupShortLinkStatsAccessRecord(ShortLinkGroupStatsAccessRecordReqDTO requestParam) {
+        LambdaQueryWrapper<LinkAccessLogsDO> queryWrapper = Wrappers.lambdaQuery(LinkAccessLogsDO.class)
+                .eq(LinkAccessLogsDO::getGid, requestParam.getGid())
+                .between(LinkAccessLogsDO::getCreateTime, 
+                        DateUtil.parseDateTime(requestParam.getStartDate() + " 00:00:00"), 
+                        DateUtil.parseDateTime(requestParam.getEndDate() + " 23:59:59"))
+                .eq(LinkAccessLogsDO::getDelFlag, 0);
+        IPage<LinkAccessLogsDO> linkAccessLogsPage = linkAccessLogsMapper.selectPage(requestParam, queryWrapper);
+        IPage<ShortLinkStatsAccessRecordRespDTO> actualResult = linkAccessLogsPage.convert(each -> BeanUtil.toBean(each, ShortLinkStatsAccessRecordRespDTO.class));
+        List<String> userAccessLogsList = actualResult.getRecords().stream()
+                .map(ShortLinkStatsAccessRecordRespDTO::getUser)
+                .toList();
+        List<Map<String, Object>> uvTypeList = linkAccessLogsMapper.selectGroupUvTypeByUsers(
+                requestParam.getGid(),
                 requestParam.getStartDate(),
                 requestParam.getEndDate(),
                 userAccessLogsList
